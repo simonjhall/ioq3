@@ -1819,7 +1819,8 @@ Q3R2OBJ = \
   $(B)/renderergl2/tr_world.o \
   \
   $(B)/renderergl1/sdl_gamma.o \
-  $(B)/renderergl1/sdl_glimp.o
+  $(B)/renderergl1/sdl_glimp.o \
+  $(B)/renderergl1/simon_glimp.o
 
 Q3R2STRINGOBJ = \
   $(B)/renderergl2/glsl/bokeh_fp.o \
@@ -1884,7 +1885,8 @@ Q3ROBJ = \
   $(B)/renderergl1/tr_world.o \
   \
   $(B)/renderergl1/sdl_gamma.o \
-  $(B)/renderergl1/sdl_glimp.o
+  $(B)/renderergl1/sdl_glimp.o \
+  $(B)/renderergl1/simon_glimp.o
 
 ifneq ($(USE_RENDERER_DLOPEN), 0)
   Q3ROBJ += \

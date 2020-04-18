@@ -647,6 +647,7 @@ void *Sys_LoadGameDll(const char *name,
 	intptr_t (*systemcalls)(intptr_t, ...))
 {
 	assert(!"Sys_LoadGameDll");
+	return 0;
 }
 #endif
 
