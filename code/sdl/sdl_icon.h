@@ -1,3 +1,5 @@
+#ifdef __x86_64__
+
 /* GIMP RGBA C-Source image dump (sdl_icon.h) */
 
 static const struct {
@@ -130,3 +132,7 @@ static const struct {
   "\0\0\0\0\0\0\0\0",
 };
 
+#else
+#error unexpected include
+
+#endif

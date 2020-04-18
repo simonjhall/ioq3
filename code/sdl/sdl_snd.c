@@ -1,3 +1,5 @@
+#ifdef __x86_64__
+
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
@@ -443,3 +445,30 @@ void SNDDMA_MasterGain( float val )
 }
 #endif
 
+#else
+#include "../qcommon/q_shared.h"
+#include "../qcommon/qcommon.h"
+
+qboolean SNDDMA_Init(void)
+{
+	return qfalse;
+}
+
+int	SNDDMA_GetDMAPos(void)
+{
+	return 0;
+}
+
+void SNDDMA_Shutdown(void)
+{
+}
+
+void SNDDMA_BeginPainting (void)
+{
+}
+
+void SNDDMA_Submit(void)
+{
+}
+
+#endif

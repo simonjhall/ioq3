@@ -1,3 +1,4 @@
+
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
@@ -31,6 +32,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include <ctype.h>
 #include <errno.h>
 
+#ifdef __x86_64__
 #ifndef DEDICATED
 #ifdef USE_LOCAL_HEADERS
 #	include "SDL.h"
@@ -38,6 +40,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #else
 #	include <SDL.h>
 #	include <SDL_cpuinfo.h>
+#endif
 #endif
 #endif
 
@@ -112,12 +115,14 @@ Restart the input subsystem
 */
 void Sys_In_Restart_f( void )
 {
+#ifdef __x86_64__
 #ifndef DEDICATED
 	if( !SDL_WasInit( SDL_INIT_VIDEO ) )
 	{
 		Com_Printf( "in_restart: Cannot restart input while video is shutdown\n" );
 		return;
 	}
+#endif
 #endif
 
 	IN_Restart( );
@@ -142,6 +147,7 @@ Sys_GetClipboardData
 */
 char *Sys_GetClipboardData(void)
 {
+#ifdef __x86_64__
 #ifdef DEDICATED
 	return NULL;
 #else
@@ -161,6 +167,9 @@ char *Sys_GetClipboardData(void)
 		SDL_free( cliptext );
 	}
 	return data;
+#endif
+#else
+	return 0;
 #endif
 }
 
@@ -284,8 +293,10 @@ static __attribute__ ((noreturn)) void Sys_Exit( int exitCode )
 {
 	CON_Shutdown( );
 
+#ifdef __x86_64__
 #ifndef DEDICATED
 	SDL_Quit( );
+#endif
 #endif
 
 	if( exitCode < 2 && com_fullyInitialized )
@@ -320,6 +331,7 @@ cpuFeatures_t Sys_GetProcessorFeatures( void )
 {
 	cpuFeatures_t features = 0;
 
+#ifdef __x86_64__
 #ifndef DEDICATED
 	if( SDL_HasRDTSC( ) )      features |= CF_RDTSC;
 	if( SDL_Has3DNow( ) )      features |= CF_3DNOW;
@@ -327,6 +339,7 @@ cpuFeatures_t Sys_GetProcessorFeatures( void )
 	if( SDL_HasSSE( ) )        features |= CF_SSE;
 	if( SDL_HasSSE2( ) )       features |= CF_SSE2;
 	if( SDL_HasAltiVec( ) )    features |= CF_ALTIVEC;
+#endif
 #endif
 
 	return features;
@@ -484,6 +497,7 @@ int Sys_FileTime( char *path )
 Sys_UnloadDll
 =================
 */
+#ifdef __x86_64__
 void Sys_UnloadDll( void *dllHandle )
 {
 	if( !dllHandle )
@@ -494,6 +508,12 @@ void Sys_UnloadDll( void *dllHandle )
 
 	Sys_UnloadLibrary(dllHandle);
 }
+#else
+void Sys_UnloadDll( void *dllHandle )
+{
+	assert(!"Sys_UnloadDll");
+}
+#endif
 
 /*
 =================
@@ -504,6 +524,7 @@ from executable path, then fs_basepath.
 =================
 */
 
+#ifdef __x86_64__
 void *Sys_LoadDll(const char *name, qboolean useSystemLib)
 {
 	void *dllhandle = NULL;
@@ -570,6 +591,7 @@ void *Sys_LoadDll(const char *name, qboolean useSystemLib)
 	
 	return dllhandle;
 }
+#endif
 
 /*
 =================
@@ -578,6 +600,7 @@ Sys_LoadGameDll
 Used to load a development dll instead of a virtual machine
 =================
 */
+#ifdef __x86_64__
 void *Sys_LoadGameDll(const char *name,
 	intptr_t (QDECL **entryPoint)(int, ...),
 	intptr_t (*systemcalls)(intptr_t, ...))
@@ -618,6 +641,14 @@ void *Sys_LoadGameDll(const char *name,
 
 	return libHandle;
 }
+#else
+void *Sys_LoadGameDll(const char *name,
+	intptr_t (QDECL **entryPoint)(int, ...),
+	intptr_t (*systemcalls)(intptr_t, ...))
+{
+	assert(!"Sys_LoadGameDll");
+}
+#endif
 
 /*
 =================
@@ -694,6 +725,7 @@ int main( int argc, char **argv )
 	extern void Sys_LaunchAutoupdater(int argc, char **argv);
 	Sys_LaunchAutoupdater(argc, argv);
 
+#ifdef __x86_64__
 #ifndef DEDICATED
 	// SDL version check
 
@@ -720,6 +752,7 @@ int main( int argc, char **argv )
 
 		Sys_Exit( 1 );
 	}
+#endif
 #endif
 
 	Sys_PlatformInit( );

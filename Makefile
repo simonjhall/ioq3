@@ -319,6 +319,10 @@ ifeq ($(SDL_CFLAGS),)
   endif
 endif
 
+ifeq ($(CROSS_COMPILING),1)
+	SDL_LIBS =
+endif
+
 # Add git version info
 USE_GIT=
 ifeq ($(wildcard .git),.git)
