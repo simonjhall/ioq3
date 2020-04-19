@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 // tr_extensions.c - extensions needed by the renderer not in sdl_glimp.c
 
-#ifdef __x86_64__
+#ifndef FPGAGL
 
 #ifdef USE_LOCAL_HEADERS
 #	include "SDL.h"

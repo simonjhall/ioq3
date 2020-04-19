@@ -262,7 +262,7 @@ static void InitOpenGL( void )
 		
 		GLimp_Init( qfalse );
 
-#ifdef __x86_64__
+#ifndef FPGAGL
 		GLimp_InitExtraExtensions();
 #endif
 

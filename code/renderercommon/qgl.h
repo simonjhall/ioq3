@@ -29,6 +29,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #ifdef USE_LOCAL_HEADERS
 #	include "SDL_opengl.h"
 #else
+#error
 #	include <SDL_opengl.h>
 #endif
 

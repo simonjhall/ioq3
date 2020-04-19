@@ -32,7 +32,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include <ctype.h>
 #include <errno.h>
 
-#ifdef __x86_64__
+#ifndef FPGAGL
 #ifndef DEDICATED
 #ifdef USE_LOCAL_HEADERS
 #	include "SDL.h"
@@ -115,7 +115,7 @@ Restart the input subsystem
 */
 void Sys_In_Restart_f( void )
 {
-#ifdef __x86_64__
+#ifndef FPGAGL
 #ifndef DEDICATED
 	if( !SDL_WasInit( SDL_INIT_VIDEO ) )
 	{
@@ -147,7 +147,7 @@ Sys_GetClipboardData
 */
 char *Sys_GetClipboardData(void)
 {
-#ifdef __x86_64__
+#ifndef FPGAGL
 #ifdef DEDICATED
 	return NULL;
 #else
@@ -263,6 +263,7 @@ Sys_InitPIDFile
 =================
 */
 void Sys_InitPIDFile( const char *gamedir ) {
+/*
 	if( Sys_WritePIDFile( gamedir ) ) {
 #ifndef DEDICATED
 		char message[1024];
@@ -279,7 +280,7 @@ void Sys_InitPIDFile( const char *gamedir ) {
 			Cvar_Set( "com_abnormalExit", "1" );
 		}
 #endif
-	}
+	}*/
 }
 
 /*
@@ -293,7 +294,7 @@ static __attribute__ ((noreturn)) void Sys_Exit( int exitCode )
 {
 	CON_Shutdown( );
 
-#ifdef __x86_64__
+#ifndef FPGAGL
 #ifndef DEDICATED
 	SDL_Quit( );
 #endif
@@ -331,7 +332,7 @@ cpuFeatures_t Sys_GetProcessorFeatures( void )
 {
 	cpuFeatures_t features = 0;
 
-#ifdef __x86_64__
+#ifndef FPGAGL
 #ifndef DEDICATED
 	if( SDL_HasRDTSC( ) )      features |= CF_RDTSC;
 	if( SDL_Has3DNow( ) )      features |= CF_3DNOW;
@@ -497,7 +498,7 @@ int Sys_FileTime( char *path )
 Sys_UnloadDll
 =================
 */
-#ifdef __x86_64__
+#ifndef FPGAGL
 void Sys_UnloadDll( void *dllHandle )
 {
 	if( !dllHandle )
@@ -524,7 +525,7 @@ from executable path, then fs_basepath.
 =================
 */
 
-#ifdef __x86_64__
+#ifndef FPGAGL
 void *Sys_LoadDll(const char *name, qboolean useSystemLib)
 {
 	void *dllhandle = NULL;
@@ -600,7 +601,7 @@ Sys_LoadGameDll
 Used to load a development dll instead of a virtual machine
 =================
 */
-#ifdef __x86_64__
+#ifndef FPGAGL
 void *Sys_LoadGameDll(const char *name,
 	intptr_t (QDECL **entryPoint)(int, ...),
 	intptr_t (*systemcalls)(intptr_t, ...))
@@ -726,7 +727,7 @@ int main( int argc, char **argv )
 	extern void Sys_LaunchAutoupdater(int argc, char **argv);
 	Sys_LaunchAutoupdater(argc, argv);
 
-#ifdef __x86_64__
+#ifndef FPGAGL
 #ifndef DEDICATED
 	// SDL version check
 

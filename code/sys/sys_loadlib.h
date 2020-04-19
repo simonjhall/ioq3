@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
 
-#ifdef __x86_64__
+#ifndef FPGAGL
 #ifdef DEDICATED
 #	ifdef _WIN32
 #		include <windows.h>

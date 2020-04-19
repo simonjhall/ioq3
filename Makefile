@@ -239,10 +239,15 @@ ifndef DEBUG_CFLAGS
 DEBUG_CFLAGS=-ggdb -O0
 endif
 
+WHICH_GL=realgl
+ifdef FPGAGL
+WHICH_GL=fpgagl
+endif
+
 #############################################################################
 
-BD=$(BUILD_DIR)/debug-$(PLATFORM)-$(ARCH)
-BR=$(BUILD_DIR)/release-$(PLATFORM)-$(ARCH)
+BD=$(BUILD_DIR)/debug-$(PLATFORM)-$(ARCH)-$(WHICH_GL)
+BR=$(BUILD_DIR)/release-$(PLATFORM)-$(ARCH)-$(WHICH_GL)
 CDIR=$(MOUNT_DIR)/client
 SDIR=$(MOUNT_DIR)/server
 RCOMMONDIR=$(MOUNT_DIR)/renderercommon
@@ -351,6 +356,10 @@ ifneq (,$(findstring "$(PLATFORM)", "linux" "gnu_kfreebsd" "kfreebsd-gnu" "gnu")
   BASE_CFLAGS = -Wall -fno-strict-aliasing -Wimplicit -Wstrict-prototypes \
     -pipe -DUSE_ICON -DARCH_STRING=\\\"$(ARCH)\\\"
   CLIENT_CFLAGS += $(SDL_CFLAGS)
+  
+  ifdef FPGAGL
+    CLIENT_CFLAGS += -DFPGAGL
+  endif
 
   OPTIMIZEVM = -O3
   OPTIMIZE = $(OPTIMIZEVM) -ffast-math
