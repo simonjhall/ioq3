@@ -362,12 +362,12 @@ ifneq (,$(findstring "$(PLATFORM)", "linux" "gnu_kfreebsd" "kfreebsd-gnu" "gnu")
   endif
 
   OPTIMIZEVM = -O3
-  OPTIMIZE = $(OPTIMIZEVM) -ffast-math
+  OPTIMIZE = $(OPTIMIZEVM) -ffast-math -g
 
   ifeq ($(ARCH),x86_64)
     OPTIMIZEVM = -O3
-    OPTIMIZE = $(OPTIMIZEVM) -ffast-math
-    HAVE_VM_COMPILED = true
+    OPTIMIZE = $(OPTIMIZEVM) -ffast-math -g
+    #HAVE_VM_COMPILED = true
   else
   ifeq ($(ARCH),x86)
     OPTIMIZEVM = -O3 -march=i586
@@ -389,6 +389,10 @@ ifneq (,$(findstring "$(PLATFORM)", "linux" "gnu_kfreebsd" "kfreebsd-gnu" "gnu")
   endif
   ifeq ($(ARCH),armv7l)
     HAVE_VM_COMPILED=true
+  endif
+  ifeq ($(ARCH),m68k)
+    OPTIMIZEVM += -m68040 -mtune=68040
+    OPTIMIZE += -m68040 -mtune=68040
   endif
   ifeq ($(ARCH),alpha)
     # According to http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=410555
@@ -1436,6 +1440,7 @@ makedirs:
 	@$(MKDIR) $(B)/client/opus
 	@$(MKDIR) $(B)/client/vorbis
 	@$(MKDIR) $(B)/renderergl1
+	@$(MKDIR) $(B)/renderergl1/fpgagl
 	@$(MKDIR) $(B)/renderergl2
 	@$(MKDIR) $(B)/renderergl2/glsl
 	@$(MKDIR) $(B)/ded
@@ -1862,6 +1867,7 @@ Q3R2STRINGOBJ = \
   $(B)/renderergl2/glsl/tonemap_vp.o
 
 Q3ROBJ = \
+  $(B)/renderergl1/fpgagl/entry_points.o \
   $(B)/renderergl1/tr_altivec.o \
   $(B)/renderergl1/tr_animation.o \
   $(B)/renderergl1/tr_backend.o \

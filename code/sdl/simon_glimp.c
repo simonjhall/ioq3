@@ -36,6 +36,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "../renderercommon/tr_common.h"
 #include "../sys/sys_local.h"
 
+#include "../renderergl1/fpgagl/entry_points.h"
+
 void (APIENTRYP qglActiveTextureARB) (GLenum texture);
 void (APIENTRYP qglClientActiveTextureARB) (GLenum texture);
 void (APIENTRYP qglMultiTexCoord2fARB) (GLenum target, GLfloat s, GLfloat t);
@@ -98,6 +100,24 @@ GLimp_SetMode
 */
 static void GLimp_SetMode(void)
 {
+#define GLE( ret, name, ... ) qgl##name = fpgagl##name;
+
+	QGL_1_1_FIXED_FUNCTION_PROCS;
+	QGL_DESKTOP_1_1_PROCS;
+	QGL_DESKTOP_1_1_FIXED_FUNCTION_PROCS;
+	//QGL_ES_1_1_PROCS;
+	QGL_1_1_PROCS;
+	//QGL_ES_1_1_FIXED_FUNCTION_PROCS;
+	//QGL_1_3_PROCS;
+	//QGL_1_5_PROCS;
+	//QGL_2_0_PROCS;
+	QGL_3_0_PROCS;
+	//QGL_ARB_occlusion_query_PROCS;
+	//QGL_ARB_framebuffer_object_PROCS;
+	//QGL_ARB_vertex_array_object_PROCS;
+	//QGL_EXT_direct_state_access_PROCS;
+#undef GLE
+	///////////////////////////////////
 	displayAspect = 1.33333f;
 	glConfig.isFullscreen = qtrue;
 	glConfig.stereoEnabled = qfalse;

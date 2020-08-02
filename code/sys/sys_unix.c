@@ -749,7 +749,7 @@ Display a *nix dialog box
 */
 dialogResult_t Sys_Dialog( dialogType_t type, const char *message, const char *title )
 {
-	typedef enum
+/*	typedef enum
 	{
 		NONE = 0,
 		ZENITY,
@@ -808,7 +808,7 @@ dialogResult_t Sys_Dialog( dialogType_t type, const char *message, const char *t
 		}
 	}
 
-	Com_DPrintf( S_COLOR_YELLOW "WARNING: failed to show a dialog\n" );
+	Com_DPrintf( S_COLOR_YELLOW "WARNING: failed to show a dialog\n" );*/
 	return DR_OK;
 }
 #endif

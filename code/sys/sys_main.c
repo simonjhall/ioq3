@@ -31,6 +31,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include <string.h>
 #include <ctype.h>
 #include <errno.h>
+#include <dlfcn.h>
 
 #ifndef FPGAGL
 #ifndef DEDICATED
@@ -498,7 +499,6 @@ int Sys_FileTime( char *path )
 Sys_UnloadDll
 =================
 */
-#ifndef FPGAGL
 void Sys_UnloadDll( void *dllHandle )
 {
 	if( !dllHandle )
@@ -507,14 +507,12 @@ void Sys_UnloadDll( void *dllHandle )
 		return;
 	}
 
-	Sys_UnloadLibrary(dllHandle);
-}
+#ifdef FPGAGL
+	dlclose(dllHandle);
 #else
-void Sys_UnloadDll( void *dllHandle )
-{
-	assert(!"Sys_UnloadDll");
-}
+	Sys_UnloadLibrary(dllHandle);
 #endif
+}
 
 /*
 =================
@@ -525,7 +523,6 @@ from executable path, then fs_basepath.
 =================
 */
 
-#ifndef FPGAGL
 void *Sys_LoadDll(const char *name, qboolean useSystemLib)
 {
 	void *dllhandle = NULL;
@@ -539,7 +536,11 @@ void *Sys_LoadDll(const char *name, qboolean useSystemLib)
 	if(useSystemLib)
 	{
 		Com_Printf("Trying to load \"%s\"...\n", name);
+#ifdef FPGAGL
+		dllhandle = dlopen(name, RTLD_NOW);
+#else
 		dllhandle = Sys_LoadLibrary(name);
+#endif
 	}
 	
 	if(!dllhandle)
@@ -557,7 +558,11 @@ void *Sys_LoadDll(const char *name, qboolean useSystemLib)
 		if(len < sizeof(libPath))
 		{
 			Com_Printf("Trying to load \"%s\" from \"%s\"...\n", name, topDir);
+#ifdef FPGAGL
+			dllhandle = dlopen(libPath, RTLD_NOW);
+#else
 			dllhandle = Sys_LoadLibrary(libPath);
+#endif
 		}
 		else
 		{
@@ -577,7 +582,11 @@ void *Sys_LoadDll(const char *name, qboolean useSystemLib)
 				if(len < sizeof(libPath))
 				{
 					Com_Printf("Trying to load \"%s\" from \"%s\"...\n", name, basePath);
+#ifdef FPGAGL
+					dllhandle = dlopen(libPath, RTLD_NOW);
+#else
 					dllhandle = Sys_LoadLibrary(libPath);
+#endif
 				}
 				else
 				{
@@ -592,7 +601,6 @@ void *Sys_LoadDll(const char *name, qboolean useSystemLib)
 	
 	return dllhandle;
 }
-#endif
 
 /*
 =================
@@ -601,7 +609,6 @@ Sys_LoadGameDll
 Used to load a development dll instead of a virtual machine
 =================
 */
-#ifndef FPGAGL
 void *Sys_LoadGameDll(const char *name,
 	intptr_t (QDECL **entryPoint)(int, ...),
 	intptr_t (*systemcalls)(intptr_t, ...))
@@ -618,21 +625,34 @@ void *Sys_LoadGameDll(const char *name,
 	}
 
 	Com_Printf( "Loading DLL file: %s\n", name);
+#ifdef FPGAGL
+	libHandle = dlopen(name, RTLD_NOW);
+#else
 	libHandle = Sys_LoadLibrary(name);
+#endif
 
 	if(!libHandle)
 	{
-		Com_Printf("Sys_LoadGameDll(%s) failed:\n\"%s\"\n", name, Sys_LibraryError());
+		Com_Printf("Sys_LoadGameDll(%s) failed:\n", name);
 		return NULL;
 	}
 
+#ifdef FPGAGL
+	dllEntry = dlsym( libHandle, "dllEntry" );
+	*entryPoint = dlsym( libHandle, "vmMain" );
+#else
 	dllEntry = Sys_LoadFunction( libHandle, "dllEntry" );
 	*entryPoint = Sys_LoadFunction( libHandle, "vmMain" );
+#endif
 
 	if ( !*entryPoint || !dllEntry )
 	{
-		Com_Printf ( "Sys_LoadGameDll(%s) failed to find vmMain function:\n\"%s\" !\n", name, Sys_LibraryError( ) );
+		Com_Printf ( "Sys_LoadGameDll(%s) failed to find vmMain function:\n", name);
+#ifdef FPGAGL
+		dlclose(libHandle);
+#else
 		Sys_UnloadLibrary(libHandle);
+#endif
 
 		return NULL;
 	}
@@ -642,15 +662,6 @@ void *Sys_LoadGameDll(const char *name,
 
 	return libHandle;
 }
-#else
-void *Sys_LoadGameDll(const char *name,
-	intptr_t (QDECL **entryPoint)(int, ...),
-	intptr_t (*systemcalls)(intptr_t, ...))
-{
-	assert(!"Sys_LoadGameDll");
-	return 0;
-}
-#endif
 
 /*
 =================
