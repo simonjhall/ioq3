@@ -9,7 +9,7 @@
 #define CODE_RENDERERGL1_FPGAGL_ENTRY_POINTS_H_
 
 /*
- * entry_points.c
+ * entry_points.h
  *
  *  Created on: 19 Apr 2020
  *      Author: simon
