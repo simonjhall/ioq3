@@ -203,7 +203,8 @@ TODO
 */
 qboolean Sys_LowPhysicalMemory( void )
 {
-	return qfalse;
+//	return qfalse;
+	return qtrue;			//stop touching all textures and used pages
 }
 
 /*
