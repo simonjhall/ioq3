@@ -536,10 +536,18 @@ static void ProjectDlightTexture_scalar( void ) {
 		}
 
 		qglEnableClientState( GL_TEXTURE_COORD_ARRAY );
+#ifdef FPGAGL
+		qglTexCoordPointerSIMON( 2, GL_FLOAT, 0, texCoordsArray[0], tess.numVertexes );
+#else
 		qglTexCoordPointer( 2, GL_FLOAT, 0, texCoordsArray[0] );
+#endif
 
 		qglEnableClientState( GL_COLOR_ARRAY );
+#ifdef FPGAGL
+		qglColorPointerSIMON( 4, GL_UNSIGNED_BYTE, 0, colorArray, tess.numVertexes );
+#else
 		qglColorPointer( 4, GL_UNSIGNED_BYTE, 0, colorArray );
+#endif
 
 		GL_Bind( tr.dlightImage );
 		// include GLS_DEPTHFUNC_EQUAL so alpha tested surfaces don't add light
@@ -580,10 +588,18 @@ static void RB_FogPass( void ) {
 	int			i;
 
 	qglEnableClientState( GL_COLOR_ARRAY );
+#ifdef FPGAGL
+	qglColorPointerSIMON( 4, GL_UNSIGNED_BYTE, 0, tess.svars.colors, tess.numVertexes );
+#else
 	qglColorPointer( 4, GL_UNSIGNED_BYTE, 0, tess.svars.colors );
+#endif
 
 	qglEnableClientState( GL_TEXTURE_COORD_ARRAY);
+#ifdef FPGAGL
+	qglTexCoordPointerSIMON( 2, GL_FLOAT, 0, tess.svars.texcoords[0], tess.numVertexes );
+#else
 	qglTexCoordPointer( 2, GL_FLOAT, 0, tess.svars.texcoords[0] );
+#endif
 
 	fog = tr.world->fogs + tess.fogNum;
 
@@ -944,7 +960,11 @@ static void RB_IterateStagesGeneric( shaderCommands_t *input )
 		if ( !setArraysOnce )
 		{
 			qglEnableClientState( GL_COLOR_ARRAY );
+#ifdef FPGAGL
+			qglColorPointerSIMON( 4, GL_UNSIGNED_BYTE, 0, input->svars.colors, input->numVertexes );
+#else
 			qglColorPointer( 4, GL_UNSIGNED_BYTE, 0, input->svars.colors );
+#endif
 		}
 
 		//
@@ -958,7 +978,11 @@ static void RB_IterateStagesGeneric( shaderCommands_t *input )
 		{
 			if ( !setArraysOnce )
 			{
+#ifdef FPGAGL
+				qglTexCoordPointerSIMON( 2, GL_FLOAT, 0, input->svars.texcoords[0], input->numVertexes );
+#else
 				qglTexCoordPointer( 2, GL_FLOAT, 0, input->svars.texcoords[0] );
+#endif
 			}
 
 			//
@@ -1023,7 +1047,8 @@ void RB_StageIteratorGeneric( void )
 	// to avoid compiling those arrays since they will change
 	// during multipass rendering
 	//
-	if ( tess.numPasses > 1 || shader->multitextureEnv )
+	//if ( tess.numPasses > 1 || shader->multitextureEnv )
+	if (1)
 	{
 		setArraysOnce = qfalse;
 		qglDisableClientState (GL_COLOR_ARRAY);
@@ -1034,16 +1059,28 @@ void RB_StageIteratorGeneric( void )
 		setArraysOnce = qtrue;
 
 		qglEnableClientState( GL_COLOR_ARRAY);
+#ifdef FPGAGL
+		qglColorPointerSIMON( 4, GL_UNSIGNED_BYTE, 0, tess.svars.colors, input->numVertexes );
+#else
 		qglColorPointer( 4, GL_UNSIGNED_BYTE, 0, tess.svars.colors );
+#endif
 
 		qglEnableClientState( GL_TEXTURE_COORD_ARRAY);
+#ifdef FPGAGL
+		qglTexCoordPointerSIMON( 2, GL_FLOAT, 0, tess.svars.texcoords[0], input->numVertexes );
+#else
 		qglTexCoordPointer( 2, GL_FLOAT, 0, tess.svars.texcoords[0] );
+#endif
 	}
 
 	//
 	// lock XYZ
 	//
+#ifdef FPGAGL
+	qglVertexPointerSIMON (3, GL_FLOAT, 16, input->xyz, input->numVertexes);
+#else
 	qglVertexPointer (3, GL_FLOAT, 16, input->xyz);	// padded for SIMD
+#endif
 	if (qglLockArraysEXT)
 	{
 		qglLockArraysEXT(0, input->numVertexes);
@@ -1135,9 +1172,15 @@ void RB_StageIteratorVertexLitTexture( void )
 	qglEnableClientState( GL_COLOR_ARRAY);
 	qglEnableClientState( GL_TEXTURE_COORD_ARRAY);
 
+#ifdef FPGAGL
+	qglColorPointerSIMON( 4, GL_UNSIGNED_BYTE, 0, tess.svars.colors, input->numVertexes );
+	qglTexCoordPointerSIMON( 2, GL_FLOAT, 16, tess.texCoords[0][0], input->numVertexes );
+	qglVertexPointerSIMON (3, GL_FLOAT, 16, input->xyz, input->numVertexes);
+#else
 	qglColorPointer( 4, GL_UNSIGNED_BYTE, 0, tess.svars.colors );
 	qglTexCoordPointer( 2, GL_FLOAT, 16, tess.texCoords[0][0] );
 	qglVertexPointer (3, GL_FLOAT, 16, input->xyz);
+#endif
 
 	if ( qglLockArraysEXT )
 	{
@@ -1211,7 +1254,11 @@ void RB_StageIteratorLightmappedMultitexture( void ) {
 	qglShadeModel( GL_FLAT );
 #else
 	qglEnableClientState( GL_COLOR_ARRAY );
+#ifdef FPGAGL
+	qglColorPointerSIMON( 4, GL_UNSIGNED_BYTE, 0, tess.constantColor255, input->numVertexes );
+#else
 	qglColorPointer( 4, GL_UNSIGNED_BYTE, 0, tess.constantColor255 );
+#endif
 #endif
 
 	//

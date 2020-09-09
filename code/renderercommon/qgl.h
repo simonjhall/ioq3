@@ -89,6 +89,7 @@ extern void (APIENTRYP qglUnlockArraysEXT) (void);
 	GLE(void, AlphaFunc, GLenum func, GLclampf ref) \
 	GLE(void, Color4f, GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha) \
 	GLE(void, ColorPointer, GLint size, GLenum type, GLsizei stride, const GLvoid *ptr) \
+	GLE(void, ColorPointerSIMON, GLint size, GLenum type, GLsizei stride, const GLvoid *ptr, GLint numverts) \
 	GLE(void, DisableClientState, GLenum cap) \
 	GLE(void, EnableClientState, GLenum cap) \
 	GLE(void, LoadIdentity, void) \
@@ -98,8 +99,10 @@ extern void (APIENTRYP qglUnlockArraysEXT) (void);
 	GLE(void, PushMatrix, void) \
 	GLE(void, ShadeModel, GLenum mode) \
 	GLE(void, TexCoordPointer, GLint size, GLenum type, GLsizei stride, const GLvoid *ptr) \
+	GLE(void, TexCoordPointerSIMON, GLint size, GLenum type, GLsizei stride, const GLvoid *ptr, GLint numverts) \
 	GLE(void, TexEnvf, GLenum target, GLenum pname, GLfloat param) \
 	GLE(void, VertexPointer, GLint size, GLenum type, GLsizei stride, const GLvoid *ptr) \
+	GLE(void, VertexPointerSIMON, GLint size, GLenum type, GLsizei stride, const GLvoid *ptr, GLint numverts) \
 
 // OpenGL 1.0/1.1 and 3.2 core profile but not OpenGL ES 1.x
 #define QGL_DESKTOP_1_1_PROCS \

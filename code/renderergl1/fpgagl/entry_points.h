@@ -17,10 +17,15 @@
 
 #include "../../renderercommon/tr_common.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // OpenGL 1.0/1.1 and OpenGL ES 1.x but not OpenGL 3.2 core profile
 void fpgaglAlphaFunc(GLenum func, GLclampf ref);
 void fpgaglColor4f(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
 void fpgaglColorPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr);
+void fpgaglColorPointerSIMON(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr, GLint numverts);
 void fpgaglDisableClientState(GLenum cap);
 void fpgaglEnableClientState(GLenum cap);
 void fpgaglLoadIdentity(void);
@@ -30,8 +35,10 @@ void fpgaglPopMatrix(void);
 void fpgaglPushMatrix(void);
 void fpgaglShadeModel(GLenum mode);
 void fpgaglTexCoordPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr);
+void fpgaglTexCoordPointerSIMON(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr, GLint numverts);
 void fpgaglTexEnvf(GLenum target, GLenum pname, GLfloat param);
 void fpgaglVertexPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr);
+void fpgaglVertexPointerSIMON(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr, GLint numverts);
 
 // OpenGL 1.0/1.1 and 3.2 core profile but not OpenGL ES 1.x
 void fpgaglClearDepth(GLclampd depth);
@@ -93,5 +100,15 @@ void fpgaglViewport(GLint x, GLint y, GLsizei width, GLsizei height);
 
 // OpenGL 3.0 specific
 const GLubyte *fpgaglGetStringi(GLenum name, GLuint index);
+
+void fpgaglLockArraysEXT(GLint first, GLsizei count);
+void fpgaglUnlockArraysEXT(void);
+
+void fpgaSwapBuffers(void);
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif /* CODE_RENDERERGL1_FPGAGL_ENTRY_POINTS_H_ */

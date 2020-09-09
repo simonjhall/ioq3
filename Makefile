@@ -1232,6 +1232,11 @@ $(echo_cmd) "REF_CC $<"
 $(Q)$(CC) $(SHLIBCFLAGS) $(CFLAGS) $(CLIENT_CFLAGS) $(OPTIMIZE) -o $@ -c $<
 endef
 
+define DO_REF_CXX
+$(echo_cmd) "REF_CXX $<"
+$(Q)$(CXX) $(SHLIBCFLAGS) $(CFLAGS) $(CLIENT_CFLAGS) $(OPTIMIZE) -o $@ -c $<
+endef
+
 define DO_REF_CC_ALTIVEC
 $(echo_cmd) "REF_CC $<"
 $(Q)$(CC) $(SHLIBCFLAGS) $(CFLAGS) $(CLIENT_CFLAGS) $(OPTIMIZE) $(ALTIVEC_CFLAGS) -o $@ -c $<
@@ -1868,6 +1873,7 @@ Q3R2STRINGOBJ = \
 
 Q3ROBJ = \
   $(B)/renderergl1/fpgagl/entry_points.o \
+  $(B)/renderergl1/fpgagl/serialise.o \
   $(B)/renderergl1/tr_altivec.o \
   $(B)/renderergl1/tr_animation.o \
   $(B)/renderergl1/tr_backend.o \
@@ -2746,6 +2752,9 @@ $(B)/renderergl1/%.o: $(RCOMMONDIR)/%.c
 
 $(B)/renderergl1/%.o: $(RGL1DIR)/%.c
 	$(DO_REF_CC)
+
+$(B)/renderergl1/%.o: $(RGL1DIR)/%.cpp
+	$(DO_REF_CXX)
 
 $(B)/renderergl1/tr_altivec.o: $(RGL1DIR)/tr_altivec.c
 	$(DO_REF_CC_ALTIVEC)

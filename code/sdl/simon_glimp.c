@@ -37,6 +37,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "../sys/sys_local.h"
 
 #include "../renderergl1/fpgagl/entry_points.h"
+#include "../renderergl1/fpgagl/serialise.h"
 
 void (APIENTRYP qglActiveTextureARB) (GLenum texture);
 void (APIENTRYP qglClientActiveTextureARB) (GLenum texture);
@@ -70,6 +71,7 @@ GLimp_Shutdown
 void GLimp_Shutdown( void )
 {
 	ri.IN_Shutdown();
+	EndSerialise();
 }
 
 /*
@@ -117,6 +119,17 @@ static void GLimp_SetMode(void)
 	//QGL_ARB_vertex_array_object_PROCS;
 	//QGL_EXT_direct_state_access_PROCS;
 #undef GLE
+	if ( r_ext_compiled_vertex_array->value )
+	{
+		ri.Printf( PRINT_ALL, "...using GL_EXT_compiled_vertex_array\n" );
+		qglLockArraysEXT = fpgaglLockArraysEXT;
+		qglUnlockArraysEXT = fpgaglUnlockArraysEXT;
+		if (!qglLockArraysEXT || !qglUnlockArraysEXT)
+		{
+			ri.Error (ERR_FATAL, "bad getprocaddress");
+		}
+	}
+
 	///////////////////////////////////
 	displayAspect = 1.33333f;
 	glConfig.isFullscreen = qtrue;
@@ -153,6 +166,8 @@ of OpenGL
 */
 void GLimp_Init( qboolean fixedFunction )
 {
+	BeginSerialise("frame_dump");
+
 	ri.Printf( PRINT_DEVELOPER, "Glimp_Init( )\n" );
 
 	ri.Sys_GLimpInit( );
@@ -195,6 +210,7 @@ void GLimp_EndFrame( void )
 	if ( Q_stricmp( r_drawBuffer->string, "GL_FRONT" ) != 0 )
 	{
 		//swap buffers
+		fpgaSwapBuffers();
 	}
 }
 
