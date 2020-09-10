@@ -413,7 +413,7 @@ void fpgaglGetIntegerv(GLenum pname, GLint *params)
 			*params = 0;
 			break;
 		case GL_MAX_TEXTURE_UNITS_ARB:
-			*params = 4;
+			*params = 2;
 			break;
 		default:
 			assert(!"invalid pname");
