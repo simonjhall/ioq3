@@ -412,6 +412,9 @@ void fpgaglGetIntegerv(GLenum pname, GLint *params)
 		case GL_NUM_EXTENSIONS:
 			*params = 0;
 			break;
+		case GL_MAX_TEXTURE_UNITS_ARB:
+			*params = 4;
+			break;
 		default:
 			assert(!"invalid pname");
 			*params = 0;
@@ -541,6 +544,26 @@ void fpgaglLockArraysEXT(GLint first, GLsizei count)
 void fpgaglUnlockArraysEXT(void)
 {
 	EmitFunc(UnlockArraysEXT);
+}
+
+void fpgaglActiveTextureARB(GLenum texture)
+{
+	EmitFunc(ActiveTextureARB);
+	EmitArg(texture);
+}
+
+void fpgaglClientActiveTextureARB(GLenum texture)
+{
+	EmitFunc(ClientActiveTextureARB);
+	EmitArg(texture);
+}
+
+void fpgaglMultiTexCoord2fARB(GLenum target, GLfloat s, GLfloat t)
+{
+	EmitFunc(MultiTexCoord2fARB);
+	EmitArg(target);
+	EmitArg(s);
+	EmitArg(t);
 }
 
 void fpgaSwapBuffers(void)

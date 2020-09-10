@@ -364,7 +364,11 @@ static void DrawMultitextured( shaderCommands_t *input, int stage ) {
 	// base
 	//
 	GL_SelectTexture( 0 );
+#ifdef FPGAGL
+	qglTexCoordPointerSIMON( 2, GL_FLOAT, 0, input->svars.texcoords[0], input->numVertexes );
+#else
 	qglTexCoordPointer( 2, GL_FLOAT, 0, input->svars.texcoords[0] );
+#endif
 	R_BindAnimatedImage( &pStage->bundle[0] );
 
 	//
@@ -380,7 +384,11 @@ static void DrawMultitextured( shaderCommands_t *input, int stage ) {
 		GL_TexEnv( tess.shader->multitextureEnv );
 	}
 
+#ifdef FPGAGL
+	qglTexCoordPointerSIMON( 2, GL_FLOAT, 0, input->svars.texcoords[1], input->numVertexes );
+#else
 	qglTexCoordPointer( 2, GL_FLOAT, 0, input->svars.texcoords[1] );
+#endif
 
 	R_BindAnimatedImage( &pStage->bundle[1] );
 
@@ -1268,7 +1276,11 @@ void RB_StageIteratorLightmappedMultitexture( void ) {
 
 	qglEnableClientState( GL_TEXTURE_COORD_ARRAY );
 	R_BindAnimatedImage( &tess.xstages[0]->bundle[0] );
+#ifdef FPGAGL
+	qglTexCoordPointerSIMON( 2, GL_FLOAT, 16, tess.texCoords[0][0], input->numVertexes );
+#else
 	qglTexCoordPointer( 2, GL_FLOAT, 16, tess.texCoords[0][0] );
+#endif
 
 	//
 	// configure second stage
@@ -1282,7 +1294,11 @@ void RB_StageIteratorLightmappedMultitexture( void ) {
 	}
 	R_BindAnimatedImage( &tess.xstages[0]->bundle[1] );
 	qglEnableClientState( GL_TEXTURE_COORD_ARRAY );
+#ifdef FPGAGL
+	qglTexCoordPointerSIMON( 2, GL_FLOAT, 16, tess.texCoords[0][1], input->numVertexes );
+#else
 	qglTexCoordPointer( 2, GL_FLOAT, 16, tess.texCoords[0][1] );
+#endif
 
 	//
 	// lock arrays

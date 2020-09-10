@@ -104,6 +104,12 @@ const GLubyte *fpgaglGetStringi(GLenum name, GLuint index);
 void fpgaglLockArraysEXT(GLint first, GLsizei count);
 void fpgaglUnlockArraysEXT(void);
 
+//ARB multitexture
+void fpgaglActiveTextureARB(GLenum texture);
+void fpgaglClientActiveTextureARB(GLenum texture);
+void fpgaglMultiTexCoord2fARB(GLenum target, GLfloat s, GLfloat t);
+
+
 void fpgaSwapBuffers(void);
 
 #ifdef __cplusplus

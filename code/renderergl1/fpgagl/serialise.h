@@ -82,6 +82,9 @@ enum GLFunction
 	LockArraysEXT,
 	UnlockArraysEXT,
 	SwapBuffers,
+	ActiveTextureARB,
+	ClientActiveTextureARB,
+	MultiTexCoord2fARB,
 };
 
 struct DataElement

@@ -143,6 +143,49 @@ static void GLimp_SetMode(void)
 	glConfig.depthBits = 16;
 	glConfig.stencilBits = 0;
 
+	glConfig.textureEnvAddAvailable = qtrue;
+
+	if ( r_ext_texture_env_add->integer )
+	{
+		glConfig.textureEnvAddAvailable = qtrue;
+		ri.Printf( PRINT_ALL, "...using GL_EXT_texture_env_add\n" );
+	}
+	else
+	{
+		glConfig.textureEnvAddAvailable = qfalse;
+		ri.Printf( PRINT_ALL, "...ignoring GL_EXT_texture_env_add\n" );
+	}
+
+	// GL_ARB_multitexture
+	qglMultiTexCoord2fARB = NULL;
+	qglActiveTextureARB = NULL;
+	qglClientActiveTextureARB = NULL;
+
+	if ( r_ext_multitexture->value )
+	{
+		qglMultiTexCoord2fARB = fpgaglMultiTexCoord2fARB;
+		qglActiveTextureARB = fpgaglActiveTextureARB;
+		qglClientActiveTextureARB = fpgaglClientActiveTextureARB;
+
+		if ( qglActiveTextureARB )
+		{
+			GLint glint = 0;
+			qglGetIntegerv( GL_MAX_TEXTURE_UNITS_ARB, &glint );
+			glConfig.numTextureUnits = (int) glint;
+			if ( glConfig.numTextureUnits > 1 )
+			{
+				ri.Printf( PRINT_ALL, "...using GL_ARB_multitexture\n" );
+			}
+			else
+			{
+				qglMultiTexCoord2fARB = NULL;
+				qglActiveTextureARB = NULL;
+				qglClientActiveTextureARB = NULL;
+				ri.Printf( PRINT_ALL, "...not using GL_ARB_multitexture, < 2 texture units\n" );
+			}
+		}
+	}
+
 	ri.Printf( PRINT_ALL, "GL_RENDERER: %s\n", qglGetString (GL_RENDERER) );
 }
 
