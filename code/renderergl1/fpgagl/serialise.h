@@ -85,6 +85,23 @@ enum GLFunction
 	ActiveTextureARB,
 	ClientActiveTextureARB,
 	MultiTexCoord2fARB,
+
+	Color4ub,
+	DrawPixels,
+	TexParameterfv,
+	TexGenf,
+	TexGenfv,
+	TexEnvi,
+	TexEnvfv,
+	NormalPointer,
+	ReadBuffer,
+
+	VertexAttribPointerARB,
+	EnableVertexAttribArrayARB,
+	DisableVertexAttribArrayARB,
+	ProgramStringARB,
+	BindProgramARB,
+	ProgramEnvParameter4fvARB,
 };
 
 struct DataElement

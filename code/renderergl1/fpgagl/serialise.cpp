@@ -6,12 +6,14 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
 
 #include "serialise.h"
 
 static FILE *g_fp = 0;
 static size_t s_written = 0;
+static const size_t limit = 10ULL << 30;
 
 int BeginSerialise(const char *pFilename)
 {
@@ -34,6 +36,14 @@ int EndSerialise(void)
 
 void Emit(int func, int size, const void *pData)
 {
+	if (func != 0)
+		if (s_written > limit)
+		{
+			EndSerialise();
+			printf("limit reached\n");
+			exit(0);
+		}
+
 	int misalignment = 0;
 	if (size & 3)
 		misalignment = 4 - (size & 3);

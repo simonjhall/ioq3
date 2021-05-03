@@ -358,7 +358,7 @@ ifneq (,$(findstring "$(PLATFORM)", "linux" "gnu_kfreebsd" "kfreebsd-gnu" "gnu")
   CLIENT_CFLAGS += $(SDL_CFLAGS)
   
   ifdef FPGAGL
-    CLIENT_CFLAGS += -DFPGAGL
+    CLIENT_CFLAGS += -DFPGAGL -DSDL_DISABLE_IMMINTRIN_H=1
   endif
 
   OPTIMIZEVM = -O3
